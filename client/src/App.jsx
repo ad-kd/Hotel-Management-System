@@ -7,6 +7,7 @@ import AllRooms from './pages/AllRooms.jsx'
 import RoomDetails from './pages/RoomDetails.jsx'
 import MyBookings from './pages/MyBookings.jsx'
 import HotelReg from './components/HotelReg.jsx'
+import Layout from './pages/hotelOwner/Layout.jsx'
 
 
 const App = () => {
@@ -23,6 +24,9 @@ const App = () => {
           <Route path='/rooms'element={<AllRooms />}/>
           <Route path='/rooms/:id'element={<RoomDetails />}/>
           <Route path='/my-bookings'element={<MyBookings />}/>
+          <Route path='/owner' element={<Layout />}>
+
+          </Route>
         </Routes>
       </div>
       <Footer />
