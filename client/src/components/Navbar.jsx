@@ -35,6 +35,9 @@ const Navbar = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isOwnerLoggedIn, setIsOwnerLoggedIn] = useState(false);
 
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+
     React.useEffect(() => {
         const token = localStorage.getItem('hotelOwnerToken');
         if (token) {
@@ -47,9 +50,6 @@ const Navbar = () => {
         setIsOwnerLoggedIn(false);
         navigate('/');
     };
-
-
-
 
     React.useEffect(() => {
         const transparentPages = ['/', '/about', '/experience'];
@@ -65,6 +65,14 @@ const Navbar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [location.pathname]);
 
+    const handleSearch = (e) => {
+        if (e.key === 'Enter' && searchQuery.trim()) {
+            navigate(`/rooms?search=${searchQuery.trim()}`);
+            setIsSearchOpen(false);
+            setSearchQuery('');
+        }
+    };
+
     return (
         <>
         <nav className={`fixed top-0 left-0  w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${isScrolled ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4" : "py-4 md:py-6"}`}>
@@ -75,7 +83,7 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-4 lg:gap-8">
+            <div className={`hidden md:flex items-center gap-4 lg:gap-8 transition-all duration-500 ${isSearchOpen ? 'opacity-0 invisible w-0' : 'opacity-100 visible'}`}>
                 {navLinks.map((link, i) => (
                     <a key={i} href={link.path} className={`group flex flex-col gap-0.5 ${isScrolled ? "text-gray-700" : "text-white"}`}>
                         {link.name}
@@ -90,8 +98,27 @@ const Navbar = () => {
             </div>
 
             {/* Desktop Right */}
-            <div className="hidden md:flex items-center gap-4">
-                <img src={asset.searchIcon} alt="search" className={`${isScrolled && 'invert h-7 transition-all duration-500'}`} />
+            <div className="hidden md:flex items-center gap-4 transition-all duration-500">
+                <div className={`flex items-center transition-all duration-500 ${isSearchOpen ? 'bg-gray-100/80 rounded-full px-4 py-1.5 w-64' : 'w-10'}`}>
+                    <img 
+                        onClick={() => setIsSearchOpen(!isSearchOpen)} 
+                        src={asset.searchIcon} 
+                        alt="search" 
+                        className={`cursor-pointer ${isScrolled && 'invert h-7 transition-all duration-500'}`} 
+                    />
+                    {isSearchOpen && (
+                        <input 
+                            autoFocus
+                            type="text" 
+                            placeholder="Search by city..." 
+                            className="bg-transparent border-none outline-none ml-2 w-full text-sm text-gray-800"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleSearch}
+                            onBlur={() => !searchQuery && setIsSearchOpen(false)}
+                        />
+                    )}
+                </div>
                 
                 {user ? 
                 (<UserButton>
@@ -111,8 +138,6 @@ const Navbar = () => {
                         <span className="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%]">Login</span>
                     </p>
                 </button>)}
-                
-                
             </div>
 
             {/* Mobile Menu Button */}

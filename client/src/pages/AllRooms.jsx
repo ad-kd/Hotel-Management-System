@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import assets, { facilityIcons } from '../assets/assets'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import StarRating from '../components/StarRating'
 
 const CheckBox = ({ label, selected = false, onChange = () => { } }) => {
@@ -23,12 +23,15 @@ const RadioButton = ({ label, selected = false, onChange = () => { } }) => {
 
 const AllRooms = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [openFilter, setOpenFilter] = React.useState(false);
   const [rooms, setRooms] = React.useState([]);
   const [filteredRooms, setFilteredRooms] = React.useState([]);
   const [selectedTypes, setSelectedTypes] = React.useState([]);
   const [selectedPrices, setSelectedPrices] = React.useState([]);
   const [sortOption, setSortOption] = React.useState('');
+
+  const searchQuery = searchParams.get('search')?.toLowerCase() || '';
 
   React.useEffect(() => {
     fetch('http://localhost:5000/api/rooms')
@@ -43,6 +46,14 @@ const AllRooms = () => {
   React.useEffect(() => {
     let result = [...rooms];
     
+    // Apply search filter
+    if (searchQuery) {
+      result = result.filter(room => 
+        room.hotel?.name?.toLowerCase().includes(searchQuery) || 
+        room.hotel?.city?.toLowerCase().includes(searchQuery)
+      );
+    }
+
     if (selectedTypes.length > 0) {
       result = result.filter(room => selectedTypes.includes(room.roomType));
     }
@@ -65,7 +76,7 @@ const AllRooms = () => {
     }
 
     setFilteredRooms(result);
-  }, [rooms, selectedTypes, selectedPrices, sortOption]);
+  }, [rooms, selectedTypes, selectedPrices, sortOption, searchQuery]);
 
   const handleTypeChange = (checked, type) => {
     setSelectedTypes(prev => checked ? [...prev, type] : prev.filter(t => t !== type));
