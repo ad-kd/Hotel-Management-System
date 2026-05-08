@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Title from '../../components/Title'
 import assets from '../../assets/assets'
+import { useNavigate } from 'react-router-dom'
 
 const AddRoom = () => {
   const [images, setImages] = useState({
@@ -10,6 +11,8 @@ const AddRoom = () => {
     4: null
   })
   const [inputs, setInputs] = useState({
+    hotelName: '',
+    hotelLocation: '',
     roomType:'',
     pricePerNight: 0,
     amenities: {
@@ -20,9 +23,46 @@ const AddRoom = () => {
       'Pool Access': false
     }
   })
+  
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('hotelName', inputs.hotelName);
+    formData.append('hotelLocation', inputs.hotelLocation);
+    formData.append('roomType', inputs.roomType);
+    formData.append('pricePerNight', inputs.pricePerNight);
+    
+    const selectedAmenities = Object.keys(inputs.amenities).filter(key => inputs.amenities[key]);
+    formData.append('amenities', JSON.stringify(selectedAmenities));
+    
+    Object.keys(images).forEach(key => {
+      if (images[key]) {
+        formData.append('images', images[key]);
+      }
+    });
+
+    try {
+      const response = await fetch('http://localhost:5000/api/rooms', {
+        method: 'POST',
+        body: formData
+      });
+      if (response.ok) {
+        alert('Room added successfully!');
+        navigate('/owner/list-room');
+      } else {
+        alert('Error adding room');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error adding room');
+    }
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Title align='left' font='outfit' title='Add Room' subTitle='Fill in the details carefully and accurate
        room details, pricing, and amenities, to enhance the user booking experience.'/>
 
@@ -42,8 +82,21 @@ const AddRoom = () => {
 
        <div className='flex w-full max-sm:flex-col sm:gap-4 mt-4'>
         <div className='flex-1 max-w-48'>
+          <p className='text-gray-800 mt-4'>Hotel Name</p>
+          <input type="text" placeholder='e.g., Grand Plaza Hotel' className='border border-gray-300 mt-1 rounded p-2 w-full'
+            value={inputs.hotelName} onChange={e=> setInputs({...inputs, hotelName:e.target.value})} required/>
+        </div>
+        <div className='flex-1 max-w-48'>
+          <p className='text-gray-800 mt-4'>Hotel Location</p>
+          <input type="text" placeholder='e.g., Downtown, NY' className='border border-gray-300 mt-1 rounded p-2 w-full'
+            value={inputs.hotelLocation} onChange={e=> setInputs({...inputs, hotelLocation:e.target.value})} required/>
+        </div>
+       </div>
+
+       <div className='flex w-full max-sm:flex-col sm:gap-4 mt-4'>
+        <div className='flex-1 max-w-48'>
           <p className='text-gray-800 mt-4'>Room Type</p>
-          <select value={inputs.roomType} onChange={e=>setInputs({...inputs, roomType: e.target.values})}
+          <select value={inputs.roomType} onChange={e=>setInputs({...inputs, roomType: e.target.value})}
             className='border opacity-70 border-gray-300 mt-1 rounded p-2 w-full'>
             <option value="">Select Room Type</option>
             <option value="Single Bed">Single Bed</option>

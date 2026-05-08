@@ -1,10 +1,30 @@
 import React, { useState } from 'react'
 import Title from '../components/Title'
-import assets, { userBookingsDummyData } from '../assets/assets'
+import assets from '../assets/assets'
 
 const MyBookings = () => {
 
-  const [bookings, setBooking] = useState(userBookingsDummyData);
+  const [bookings, setBooking] = useState([]);
+
+  React.useEffect(() => {
+    fetch('http://localhost:5000/api/bookings')
+      .then(res => res.json())
+      .then(data => setBooking(data))
+      .catch(err => console.error(err));
+  }, []);
+
+  const handlePayment = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/bookings/${id}/pay`, {
+        method: 'PUT'
+      });
+      if (response.ok) {
+        setBooking(prevBookings => prevBookings.map(b => b._id === id ? { ...b, isPaid: true } : b));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className='py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32'>
@@ -25,15 +45,15 @@ const MyBookings = () => {
               py-6 first:border-t'>
             {/* Hotel Details */}
             <div className='flex flex-col md:flex-row'>
-              <img src={booking.room.images[0]} alt="Hotel-Img"
+              <img src={booking.room?.images?.[0] || assets.roomImg1} alt="Hotel-Img"
                 className=' min-md:w-44 rounded shadow object-cover' />
               <div className='flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4'>
-                <p className='font-playfair text-2xl'>{booking.hotel.name}
-                  <span className='font-inner text-sm'> ({booking.room.roomType})</span>
+                <p className='font-playfair text-2xl'>{booking.hotel?.name || 'Unknown Hotel'}
+                  <span className='font-inner text-sm'> ({booking.room?.roomType || 'Deleted Room'})</span>
                 </p>
                 <div className='flex items-center gap-1 text-gray-500 text-sm'>
                   <img src={assets.locationIcon} alt="Locarion-Icon"/>
-                  <span>{booking.hotel.address}</span>
+                  <span>{booking.hotel?.address || 'Unknown Address'}</span>
                 </div>
                 <div className='flex items-center gap-1 text-gray-500 text-sm'>
                   <img src={assets.guestsIcon} alt="Guest-Icon"/>
@@ -66,7 +86,7 @@ const MyBookings = () => {
                    </p>
               </div>
               {!booking.isPaid && (
-                <button className='px-4 py-1.5 mt-4 text-xs border border-gray-400
+                <button onClick={() => handlePayment(booking._id)} className='px-4 py-1.5 mt-4 text-xs border border-gray-400
                 rounded-full hover:bg-gray-50 transition-all cursor-pointer'>
                   Pay Now
                 </button>

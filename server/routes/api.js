@@ -1,0 +1,195 @@
+const express = require('express');
+const router = express.Router();
+const Room = require('../models/Room');
+const Booking = require('../models/Booking');
+const Hotel = require('../models/Hotel');
+const User = require('../models/User');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../../client/public/assets'));
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
+
+// Owner DB Authentication
+router.post('/owner/login', async (req, res) => {
+    const { email, password } = req.body;
+    
+    // As requested: predefined user
+    if (email === 'owner@gmail.com' && password === 'owner12345') {
+        // Return a simple success token (in a real app, this would be a JWT)
+        return res.json({ token: 'hotel-owner-db-token' });
+    } else {
+        return res.status(401).json({ error: 'Invalid email or password' });
+    }
+});
+
+// Add room
+router.post('/rooms', upload.any(), async (req, res) => {
+    try {
+        let hotelName = req.body.hotelName || 'My Hotel';
+        let hotelLocation = req.body.hotelLocation || 'Unknown Location';
+        
+        let hotel = await Hotel.findOne({ name: hotelName });
+        if (!hotel) {
+            const owner = await User.findOne();
+            hotel = await Hotel.create({
+                owner: owner ? owner._id : null,
+                name: hotelName,
+                address: hotelLocation
+            });
+        } else if (req.body.hotelLocation && hotel.address !== req.body.hotelLocation) {
+            hotel.address = req.body.hotelLocation;
+            await hotel.save();
+        }
+        
+        let amenities = [];
+        try {
+            amenities = JSON.parse(req.body.amenities || '[]');
+        } catch (e) {
+            console.error('Error parsing amenities:', e);
+        }
+
+        const images = req.files ? req.files.map(file => `/assets/${file.filename}`) : [];
+
+        const newRoom = await Room.create({
+            hotel: hotel._id,
+            roomType: req.body.roomType,
+            pricePerNight: Number(req.body.pricePerNight),
+            amenities: amenities,
+            images: images.length ? images : ['/assets/roomImg1.png']
+        });
+
+        res.json(newRoom);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all rooms
+router.get('/rooms', async (req, res) => {
+    try {
+        const rooms = await Room.find().populate('hotel').lean();
+        for (let room of rooms) {
+            if (room.hotel && room.hotel.owner) {
+                const owner = await User.findById(room.hotel.owner).lean();
+                room.hotel.owner = owner;
+            }
+        }
+        res.json(rooms);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get room by ID
+router.get('/rooms/:id', async (req, res) => {
+    try {
+        const room = await Room.findById(req.params.id).populate('hotel').lean();
+        if (!room) return res.status(404).json({ error: 'Room not found' });
+        
+        if (room.hotel && room.hotel.owner) {
+            const owner = await User.findById(room.hotel.owner).lean();
+            room.hotel.owner = owner;
+        }
+        res.json(room);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update room by ID
+router.put('/rooms/:id', async (req, res) => {
+    try {
+        const updatedRoom = await Room.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(updatedRoom);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all bookings
+router.get('/bookings', async (req, res) => {
+    try {
+        const bookings = await Booking.find().populate('room').populate('hotel').populate('user').lean();
+        for (let booking of bookings) {
+            if (booking.room && booking.room.hotel) {
+                const hotel = await Hotel.findById(booking.room.hotel).lean();
+                booking.room.hotel = hotel;
+            }
+        }
+        res.json(bookings);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get dashboard stats
+router.get('/dashboard', async (req, res) => {
+    try {
+        const bookings = await Booking.find().populate('room').populate('hotel').populate('user').lean();
+        for (let booking of bookings) {
+            if (booking.room && booking.room.hotel) {
+                const hotel = await Hotel.findById(booking.room.hotel).lean();
+                booking.room.hotel = hotel;
+            }
+        }
+        const totalBookings = bookings.length;
+        const totalRevenue = bookings.reduce((sum, b) => sum + b.totalPrice, 0);
+        res.json({ totalBookings, totalRevenue, bookings });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Delete room
+router.delete('/rooms/:id', async (req, res) => {
+    try {
+        await Room.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Room deleted' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Add booking
+router.post('/bookings', async (req, res) => {
+    try {
+        const { room, hotel, checkInDate, checkOutDate, totalPrice, guests, paymentMethod } = req.body;
+        const user = await User.findOne();
+
+        const booking = await Booking.create({
+            user: user._id,
+            room,
+            hotel,
+            checkInDate,
+            checkOutDate,
+            totalPrice,
+            guests,
+            paymentMethod,
+            status: 'pending',
+            isPaid: false
+        });
+        res.json(booking);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Update booking payment
+router.put('/bookings/:id/pay', async (req, res) => {
+    try {
+        const booking = await Booking.findByIdAndUpdate(req.params.id, { isPaid: true }, { new: true });
+        res.json(booking);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+module.exports = router;

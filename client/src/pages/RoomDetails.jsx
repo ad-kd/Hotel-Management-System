@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import assets, { facilityIcons, roomCommonData, roomsDummyData } from '../assets/assets'
+import { useParams, useNavigate } from 'react-router-dom'
+import assets, { facilityIcons, roomCommonData } from '../assets/assets'
 import StarRating from '../components/StarRating.jsx'
 
 const RoomDetails = () => {
@@ -8,12 +8,64 @@ const RoomDetails = () => {
   const { id } = useParams();
   const [room, setRoom] = useState(null);
   const [mainImage, setMainImage] = useState(null);
+  const navigate = useNavigate();
+  const [checkInDate, setCheckInDate] = useState('');
+  const [checkOutDate, setCheckOutDate] = useState('');
+  const [guests, setGuests] = useState(1);
+
+  const handleBooking = async (e) => {
+    e.preventDefault();
+    const inDate = new Date(checkInDate);
+    const outDate = new Date(checkOutDate);
+    const timeDiff = outDate.getTime() - inDate.getTime();
+    const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    
+    if (days <= 0) {
+      alert("Check-Out date must be after Check-In date.");
+      return;
+    }
+
+    const totalPrice = days * room.pricePerNight * guests;
+
+    try {
+      const response = await fetch('http://localhost:5000/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          room: room._id,
+          hotel: room.hotel._id,
+          checkInDate,
+          checkOutDate,
+          totalPrice,
+          guests,
+          paymentMethod: 'Stripe'
+        })
+      });
+      if (response.ok) {
+        alert('Booking successful! Redirecting to your bookings...');
+        navigate('/my-bookings');
+      } else {
+        alert('Error making booking.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error making booking.');
+    }
+  };
 
   useEffect(() => {
-    const room = roomsDummyData.find(room => room._id === id)
-    room && setRoom(room);
-    room && setMainImage(room.images[0]);
-  }, []);
+    fetch(`http://localhost:5000/api/rooms/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          setRoom(data);
+          setMainImage(data.images[0]);
+        }
+      })
+      .catch(err => console.error(err));
+  }, [id]);
 
   return room && (
 
@@ -73,7 +125,7 @@ const RoomDetails = () => {
 
       {/* Checkin & CheckOut Form */}
 
-      <form className='flex flex-col md:flex-row items-start md:items-center justify-between
+      <form onSubmit={handleBooking} className='flex flex-col md:flex-row items-start md:items-center justify-between
        bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl'>
         <div className='flex flex-col flex-wrap md:flex-row items-start
          md:items-center gap-4 md:gap-10 text-gray-500'>
@@ -81,22 +133,26 @@ const RoomDetails = () => {
           <div className='flex flex-col'>
             <label className='font-medium' htmlFor="checkInDate">Check-In</label>
             <input type="date" id='checkInDate' placeholder='Check-In'
+              value={checkInDate} onChange={(e) => setCheckInDate(e.target.value)}
               className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required />
           </div>
           <div className='w-px h-15 bg-gray-300/70 max-md:hidden'></div>
           <div className='flex flex-col'>
             <label className='font-medium' htmlFor="checkOutDate">Check-Out</label>
             <input type="date" id='checkOutDate' placeholder='Check-Out'
+              value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)}
               className='w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required />
           </div>
           <div className='w-px h-15 bg-gray-300/70 max-md:hidden'></div>
           <div className='flex flex-col'>
             <label htmlFor='guests' className='font-medium'>Guests</label>
-            <input type="number" id='guests' placeholder='0' className='max-w-20 rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required />
+            <input type="number" id='guests' placeholder='0' min="1"
+              value={guests} onChange={(e) => setGuests(e.target.value)}
+              className='max-w-20 rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none' required />
           </div>
         </div>
         <button type='submit' className='bg-primary hover:bg-primary-dull active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 text-base cursor-pointer'>
-          Check Availability
+          Book Now
         </button>
       </form>
 

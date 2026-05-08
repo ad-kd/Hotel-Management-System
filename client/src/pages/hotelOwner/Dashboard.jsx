@@ -1,10 +1,17 @@
 import React, { useState } from 'react'
 import Title from '../../components/Title'
-import assets, { dashboardDummyData } from '../../assets/assets'
+import assets from '../../assets/assets'
 
 const Dashboard = () => {
 
-  const[dashboardData, setDashboardData]= useState(dashboardDummyData)
+  const[dashboardData, setDashboardData]= useState({ totalBookings: 0, totalRevenue: 0, bookings: [] })
+
+  React.useEffect(() => {
+    fetch('http://localhost:5000/api/dashboard')
+      .then(res => res.json())
+      .then(data => setDashboardData(data))
+      .catch(err => console.error(err));
+  }, []);
 
 
   return (
@@ -50,11 +57,11 @@ const Dashboard = () => {
           {dashboardData.bookings.map((item, index)=>(
             <tr key={index}>
               <td className='py-3 px-4 text-gray-700 border-t border-gray-300'>
-                {item.user.username}
+                {item.user?.username || 'Unknown User'}
               </td>
 
               <td className='py-3 px-4 text-gray-700 border-t border-gray-300 max-sm:hidden'>
-                {item.room.roomType}
+                {item.room?.roomType || 'Deleted Room'}
               </td>
 
               <td className='py-3 px-4 text-gray-700 border-t border-gray-300 text-center'>

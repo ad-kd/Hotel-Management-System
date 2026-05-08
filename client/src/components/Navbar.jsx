@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import asset from '../assets/assets.js'
 import { useClerk, useUser ,UserButton } from '@clerk/clerk-react';
+import LoginModal from './LoginModal';
 
 
 const BookIcon = ()=>(
@@ -14,8 +15,8 @@ const Navbar = () => {
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Hotels', path: '/rooms' },
-        { name: 'Experience', path: '/' },
-        { name: 'About', path: '/' },
+        { name: 'Experience', path: '/experience' },
+        { name: 'About', path: '/about' },
     ];
 
 
@@ -25,28 +26,41 @@ const Navbar = () => {
     const {user} = useUser();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isOwnerLoggedIn, setIsOwnerLoggedIn] = useState(false);
+
+    React.useEffect(() => {
+        const token = localStorage.getItem('hotelOwnerToken');
+        if (token) {
+            setIsOwnerLoggedIn(true);
+        }
+    }, []);
+
+    const handleOwnerLogout = () => {
+        localStorage.removeItem('hotelOwnerToken');
+        setIsOwnerLoggedIn(false);
+        navigate('/');
+    };
 
 
 
 
     React.useEffect(() => {
+        const transparentPages = ['/', '/about', '/experience'];
+        const isTransparentPage = transparentPages.includes(location.pathname);
 
-        if(location.pathname !== '/'){
-            setIsScrolled(true);
-        }else{
-            setIsScrolled(false);
-        }
-        setIsScrolled(prev => location.pathname !== '/' ? true : prev);
-
+        setIsScrolled(!isTransparentPage || window.scrollY > 10);
 
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
+            setIsScrolled(!isTransparentPage || window.scrollY > 10);
         };
+
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, [location.pathname]);
 
     return (
+        <>
         <nav className={`fixed top-0 left-0  w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${isScrolled ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4" : "py-4 md:py-6"}`}>
 
             {/* Logo */}
@@ -62,9 +76,11 @@ const Navbar = () => {
                         <div className={`${isScrolled ? "bg-gray-700" : "bg-white"} h-0.5 w-0 group-hover:w-full transition-all duration-300`} />
                     </a>
                 ))}
-                <button onClick={() => {navigate('/owner')}} className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`}>
-                    Dashboard
-                </button>
+                {isOwnerLoggedIn && (
+                    <button onClick={() => {navigate('/owner')}} className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black border-black' : 'text-white border-white'} transition-all`}>
+                        Dashboard
+                    </button>
+                )}
             </div>
 
             {/* Desktop Right */}
@@ -77,11 +93,15 @@ const Navbar = () => {
                         <UserButton.Action label='My Bookings' labelIcon={<BookIcon/>} onClick={()=> navigate('/my-bookings')} />
                     </UserButton.MenuItems>
                 </UserButton>)
+                : isOwnerLoggedIn ?
+                (<button onClick={handleOwnerLogout} className="group px-8 py-2.5 bg-red-600 rounded-lg text-white cursor-pointer active:scale-95 transition duration-300 hover:bg-red-700">
+                    Logout
+                </button>)
                 :
-                (<button onClick={openSignIn} class="group px-8 py-2.5 bg-indigo-600 rounded-lg text-white cursor-pointer active:scale-95 transition duration-300 hover:bg-indigo-700">
-                    <p class="relative h-6 overflow-hidden">
-                        <span class="block transition-transform duration-300 group-hover:-translate-y-full">Login</span>
-                        <span class="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%]">Login</span>
+                (<button onClick={() => setIsLoginModalOpen(true)} className="group px-8 py-2.5 bg-indigo-600 rounded-lg text-white cursor-pointer active:scale-95 transition duration-300 hover:bg-indigo-700">
+                    <p className="relative h-6 overflow-hidden">
+                        <span className="block transition-transform duration-300 group-hover:-translate-y-full">Login</span>
+                        <span className="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%]">Login</span>
                     </p>
                 </button>)}
                 
@@ -113,15 +133,25 @@ const Navbar = () => {
                     </a>
                 ))}
 
-                {user && <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all" onClick={() => {navigate('/owner')}}>
+                {isOwnerLoggedIn && <button className="border border-gray-500 px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all" onClick={() => {navigate('/owner')}}>
                     Dashboard
                 </button>}
 
-                {!user && <button onClick={openSignIn} className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">
+                {!user && !isOwnerLoggedIn && <button onClick={() => setIsLoginModalOpen(true)} className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">
                     Login
                 </button>}
+                {isOwnerLoggedIn && <button onClick={handleOwnerLogout} className="bg-red-600 text-white px-8 py-2.5 rounded-full transition-all duration-500">
+                    Logout
+                </button>}
             </div>
+
         </nav>
+        <LoginModal 
+            isOpen={isLoginModalOpen} 
+            onClose={() => setIsLoginModalOpen(false)} 
+            setOwnerLoggedIn={setIsOwnerLoggedIn} 
+        />
+        </>
     );
 }
 

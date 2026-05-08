@@ -1,9 +1,47 @@
 import React, { useState } from 'react'
-import { roomsDummyData } from '../../assets/assets'
+
 import Title from '../../components/Title'
 
 const ListRoom = () => {
-  const [rooms, setRooms] = useState(roomsDummyData)
+  const [rooms, setRooms] = useState([])
+
+  React.useEffect(() => {
+    fetch('http://localhost:5000/api/rooms')
+      .then(res => res.json())
+      .then(data => setRooms(data))
+      .catch(err => console.error(err));
+  }, []);
+
+  const toggleAvailability = async (id, currentStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/rooms/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isAvailable: !currentStatus })
+      });
+      if (response.ok) {
+        setRooms(prevRooms => prevRooms.map(room => room._id === id ? { ...room, isAvailable: !currentStatus } : room));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteRoom = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this room?')) return;
+    try {
+      const response = await fetch(`http://localhost:5000/api/rooms/${id}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        setRooms(prevRooms => prevRooms.filter(room => room._id !== id));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div>
@@ -40,14 +78,19 @@ const ListRoom = () => {
                   </td>
 
                   <td className='py-3 px-4 border-t text-sm text-red-500 text-center border-gray-300'>
-                    <label className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3'>
-                      <input type="checkbox" className='sr-only peer' checked={item.isAvailable} />
-                      <div className='w-12 h-7 bg-slate-300 rounded-full peer peer-checked:bg-blue-600
-                    transition-colors duration-200'></div>
-                      <span className='dot absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform
-                        duration-200 ease-in-out peer-checked:translate-x-5'></span>
+                    <div className='flex items-center justify-center gap-4'>
+                      <label className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3'>
+                        <input type="checkbox" className='sr-only peer' checked={item.isAvailable} onChange={() => toggleAvailability(item._id, item.isAvailable)} />
+                        <div className='w-12 h-7 bg-slate-300 rounded-full peer peer-checked:bg-blue-600
+                      transition-colors duration-200'></div>
+                        <span className='dot absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform
+                          duration-200 ease-in-out peer-checked:translate-x-5'></span>
 
-                    </label>
+                      </label>
+                      <button onClick={() => deleteRoom(item._id)} className='text-red-500 hover:text-red-700 cursor-pointer bg-red-100 px-3 py-1 rounded'>
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
