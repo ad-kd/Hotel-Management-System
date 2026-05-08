@@ -4,6 +4,7 @@ const Room = require('../models/Room');
 const Booking = require('../models/Booking');
 const Hotel = require('../models/Hotel');
 const User = require('../models/User');
+const Review = require('../models/Review');
 const multer = require('multer');
 const path = require('path');
 
@@ -38,11 +39,22 @@ router.post('/rooms', upload.any(), async (req, res) => {
         
         let hotel = await Hotel.findOne({ name: hotelName });
         if (!hotel) {
-            const owner = await User.findOne();
+            let owner = await User.findOne();
+            // If no user exists, create a dummy one just to satisfy the required ref
+            if (!owner) {
+                owner = await User.create({
+                    username: 'hotel_owner',
+                    email: 'owner@gmail.com',
+                    role: 'hotelOwner',
+                    clerkId: 'dummy_clerk_id'
+                });
+            }
             hotel = await Hotel.create({
-                owner: owner ? owner._id : null,
+                owner: owner._id,
                 name: hotelName,
-                address: hotelLocation
+                address: hotelLocation,
+                contact: 'Not Provided',
+                city: hotelLocation.split(',')[0].trim() || 'Unknown City'
             });
         } else if (req.body.hotelLocation && hotel.address !== req.body.hotelLocation) {
             hotel.address = req.body.hotelLocation;
@@ -161,8 +173,24 @@ router.delete('/rooms/:id', async (req, res) => {
 // Add booking
 router.post('/bookings', async (req, res) => {
     try {
-        const { room, hotel, checkInDate, checkOutDate, totalPrice, guests, paymentMethod } = req.body;
-        const user = await User.findOne();
+        const { clerkId, username, email, image, room, hotel, checkInDate, checkOutDate, totalPrice, guests, paymentMethod } = req.body;
+        
+        // Find or create user
+        let user;
+        if (clerkId) {
+            user = await User.findOne({ clerkId });
+            if (!user) {
+                user = await User.create({
+                    clerkId,
+                    username: username || 'Guest',
+                    email: email || `${clerkId}@clerk.com`,
+                    image: image || '',
+                    role: 'user'
+                });
+            }
+        } else {
+            user = await User.findOne(); // Fallback for dummy
+        }
 
         const booking = await Booking.create({
             user: user._id,
@@ -172,9 +200,9 @@ router.post('/bookings', async (req, res) => {
             checkOutDate,
             totalPrice,
             guests,
-            paymentMethod,
-            status: 'pending',
-            isPaid: false
+            paymentMethod: paymentMethod || 'Stripe',
+            status: 'confirmed',
+            isPaid: true
         });
         res.json(booking);
     } catch (err) {
@@ -187,6 +215,58 @@ router.put('/bookings/:id/pay', async (req, res) => {
     try {
         const booking = await Booking.findByIdAndUpdate(req.params.id, { isPaid: true }, { new: true });
         res.json(booking);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- REVIEWS ROUTES ---
+
+// Add a new review
+router.post('/reviews', async (req, res) => {
+    try {
+        const { clerkId, roomId, hotelId, rating, comment } = req.body;
+        
+        // Find user
+        const user = await User.findOne({ clerkId });
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        // Verify if user paid for this room
+        const hasPaidBooking = await Booking.findOne({
+            user: user._id,
+            room: roomId,
+            isPaid: true
+        });
+
+        // Review is verified only if they have a paid booking
+        const isVerified = !!hasPaidBooking;
+
+        const newReview = await Review.create({
+            user: user._id,
+            room: roomId,
+            hotel: hotelId,
+            rating,
+            comment,
+            isVerified
+        });
+
+        res.json(newReview);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all verified reviews (for testimonials on homepage)
+router.get('/reviews', async (req, res) => {
+    try {
+        // Fetch verified reviews, populate user info
+        const reviews = await Review.find({ isVerified: true })
+            .populate('user', 'username image')
+            .sort({ createdAt: -1 })
+            .limit(10)
+            .lean();
+            
+        res.json(reviews);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useUser, useClerk } from '@clerk/clerk-react'
 import assets, { facilityIcons, roomCommonData } from '../assets/assets'
 import StarRating from '../components/StarRating.jsx'
+import { useNotify } from '../context/NotificationContext'
 
 const RoomDetails = () => {
 
@@ -13,46 +15,80 @@ const RoomDetails = () => {
   const [checkOutDate, setCheckOutDate] = useState('');
   const [guests, setGuests] = useState(1);
 
+  const { user } = useUser();
+  const { openSignIn } = useClerk();
+  const { notify } = useNotify();
+
   const handleBooking = async (e) => {
     e.preventDefault();
+    if (!user) {
+      return openSignIn();
+    }
     const inDate = new Date(checkInDate);
     const outDate = new Date(checkOutDate);
     const timeDiff = outDate.getTime() - inDate.getTime();
     const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
     
     if (days <= 0) {
-      alert("Check-Out date must be after Check-In date.");
+      notify({
+        type: 'error',
+        title: 'Invalid Dates',
+        message: 'Check-Out date must be after Check-In date.'
+      });
       return;
     }
 
     const totalPrice = days * room.pricePerNight * guests;
 
-    try {
-      const response = await fetch('http://localhost:5000/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          room: room._id,
-          hotel: room.hotel._id,
-          checkInDate,
-          checkOutDate,
-          totalPrice,
-          guests,
-          paymentMethod: 'Stripe'
-        })
-      });
-      if (response.ok) {
-        alert('Booking successful! Redirecting to your bookings...');
-        navigate('/my-bookings');
-      } else {
-        alert('Error making booking.');
+    notify({
+      type: 'confirm',
+      title: 'Confirm Payment',
+      message: `Proceed with payment of $${totalPrice}?`,
+      onConfirm: async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/bookings', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              clerkId: user.id,
+              username: user.fullName || user.username || 'Guest',
+              email: user.primaryEmailAddress?.emailAddress || '',
+              image: user.imageUrl || '',
+              room: room._id,
+              hotel: room.hotel._id,
+              checkInDate,
+              checkOutDate,
+              totalPrice,
+              guests,
+              paymentMethod: 'Stripe'
+            })
+          });
+          if (response.ok) {
+            notify({
+              type: 'success',
+              title: 'Booking Confirmed!',
+              message: 'Your stay has been booked successfully. Redirecting to your bookings...',
+              onConfirm: () => navigate('/my-bookings')
+            });
+          } else {
+            notify({
+              type: 'error',
+              title: 'Booking Failed',
+              message: 'There was an error making your booking. Please try again.'
+            });
+          }
+        } catch (err) {
+          console.error(err);
+          notify({
+            type: 'error',
+            title: 'Error',
+            message: 'An unexpected error occurred.'
+          });
+        }
       }
-    } catch (err) {
-      console.error(err);
-      alert('Error making booking.');
-    }
+    });
   };
 
   useEffect(() => {

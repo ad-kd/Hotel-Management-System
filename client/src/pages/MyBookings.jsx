@@ -1,17 +1,31 @@
 import React, { useState } from 'react'
 import Title from '../components/Title'
 import assets from '../assets/assets'
+import { useUser } from '@clerk/clerk-react'
+import { useNavigate } from 'react-router-dom'
+import BillModal from '../components/BillModal'
+import { useNotify } from '../context/NotificationContext'
 
 const MyBookings = () => {
-
+  const { user } = useUser();
+  const navigate = useNavigate();
+  const { notify } = useNotify();
   const [bookings, setBooking] = useState([]);
+  const [isBillModalOpen, setIsBillModalOpen] = useState(false);
+  const [selectedBillBooking, setSelectedBillBooking] = useState(null);
 
   React.useEffect(() => {
-    fetch('http://localhost:5000/api/bookings')
-      .then(res => res.json())
-      .then(data => setBooking(data))
-      .catch(err => console.error(err));
-  }, []);
+    if (user) {
+      fetch('http://localhost:5000/api/bookings')
+        .then(res => res.json())
+        .then(data => {
+          const userBookings = data.filter(booking => booking.user?.clerkId === user.id);
+          userBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          setBooking(userBookings);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [user]);
 
   const handlePayment = async (id) => {
     try {
@@ -20,9 +34,19 @@ const MyBookings = () => {
       });
       if (response.ok) {
         setBooking(prevBookings => prevBookings.map(b => b._id === id ? { ...b, isPaid: true } : b));
+        notify({
+          type: 'success',
+          title: 'Payment Successful',
+          message: 'Your payment has been processed and your bill is now paid.'
+        });
       }
     } catch (err) {
       console.error(err);
+      notify({
+        type: 'error',
+        title: 'Payment Failed',
+        message: 'There was an error processing your payment.'
+      });
     }
   };
 
@@ -77,7 +101,7 @@ const MyBookings = () => {
             </div>
             
             {/* Payment status */}
-            <div className='flex flex-col items-start justify-center pt-3'>
+            <div className='flex flex-col items-start justify-center pt-3 gap-2'>
               <div className='flex items-center gap-2'>
                 <div className={`h-3 w-3 rounded-full
                    ${booking.isPaid?"bg-green-500":"bg-red-500"}`}></div>
@@ -85,8 +109,27 @@ const MyBookings = () => {
                     {booking.isPaid?"Paid":"Unpaid"}
                    </p>
               </div>
-              {!booking.isPaid && (
-                <button onClick={() => handlePayment(booking._id)} className='px-4 py-1.5 mt-4 text-xs border border-gray-400
+              
+              {booking.isPaid ? (
+                <div className='flex flex-col gap-2 mt-2'>
+                  <button 
+                    onClick={() => {
+                      setSelectedBillBooking(booking);
+                      setIsBillModalOpen(true);
+                    }} 
+                    className='px-4 py-1.5 text-xs border border-indigo-400 text-indigo-600 rounded-full hover:bg-indigo-50 transition-all cursor-pointer'
+                  >
+                    View Bill
+                  </button>
+                  <button 
+                    onClick={() => navigate('/write-review')} 
+                    className='px-4 py-1.5 text-xs bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all cursor-pointer'
+                  >
+                    Write Review
+                  </button>
+                </div>
+              ) : (
+                <button onClick={() => handlePayment(booking._id)} className='px-4 py-1.5 mt-2 text-xs border border-gray-400
                 rounded-full hover:bg-gray-50 transition-all cursor-pointer'>
                   Pay Now
                 </button>
@@ -97,6 +140,11 @@ const MyBookings = () => {
         ))}
 
       </div>
+      <BillModal 
+        isOpen={isBillModalOpen} 
+        onClose={() => setIsBillModalOpen(false)} 
+        booking={selectedBillBooking} 
+      />
     </div>
   )
 }

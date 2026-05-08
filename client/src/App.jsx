@@ -13,6 +13,7 @@ import Layout from './pages/hotelOwner/Layout.jsx'
 import Dashboard from './pages/hotelOwner/Dashboard.jsx'
 import AddRooms from './pages/hotelOwner/AddRoom.jsx'
 import ListRooms from './pages/hotelOwner/ListRoom.jsx'
+import WriteReview from './pages/WriteReview.jsx'
 
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
           <Route path='/my-bookings'element={<MyBookings />}/>
           <Route path='/about'element={<About />}/>
           <Route path='/experience' element={<Experience />}/>
+          <Route path='/write-review' element={<WriteReview />}/>
           <Route path='/owner' element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path='add-room' element={<AddRooms />} />

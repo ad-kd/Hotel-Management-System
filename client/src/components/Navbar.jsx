@@ -11,6 +11,12 @@ const BookIcon = ()=>(
 </svg>
 )
 
+const ReviewIcon = ()=>(
+    <svg className="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.083 5.104c.35-.8 1.485-.8 1.834 0l1.752 4.022a1 1 0 0 0 .84.597l4.463.342c.9.069 1.255 1.2.556 1.771l-3.33 2.723a1 1 0 0 0-.337 1.016l1.03 4.322c.214.896-.71 1.523-1.483 1.05l-3.84-2.35a1 1 0 0 0-.965 0l-3.84 2.35c-.773.473-1.697-.154-1.483-1.05l1.03-4.322a1 1 0 0 0-.337-1.016l-3.33-2.723c-.699-.571-.344-1.702.556-1.771l4.462-.342a1 1 0 0 0 .84-.597l1.753-4.022Z"/>
+    </svg>
+)
+
 const Navbar = () => {
     const navLinks = [
         { name: 'Home', path: '/' },
@@ -91,6 +97,7 @@ const Navbar = () => {
                 (<UserButton>
                     <UserButton.MenuItems>
                         <UserButton.Action label='My Bookings' labelIcon={<BookIcon/>} onClick={()=> navigate('/my-bookings')} />
+                        <UserButton.Action label='Write Review' labelIcon={<ReviewIcon/>} onClick={()=> navigate('/write-review')} />
                     </UserButton.MenuItems>
                 </UserButton>)
                 : isOwnerLoggedIn ?
@@ -116,6 +123,7 @@ const Navbar = () => {
                 {user && <UserButton>
                     <UserButton.MenuItems>
                         <UserButton.Action label='My Bookings' labelIcon={<BookIcon/>} onClick={()=> navigate('/my-bookings')} />
+                        <UserButton.Action label='Write Review' labelIcon={<ReviewIcon/>} onClick={()=> navigate('/write-review')} />
                     </UserButton.MenuItems>
                 </UserButton>}
                 <img onClick={() => setIsMenuOpen(!isMenuOpen)} src={asset.menuIcon} alt="Menu Icon" className={`${isScrolled && "invert h-4"}`} />

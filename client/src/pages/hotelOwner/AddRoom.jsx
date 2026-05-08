@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Title from '../../components/Title'
 import assets from '../../assets/assets'
 import { useNavigate } from 'react-router-dom'
+import { useNotify } from '../../context/NotificationContext'
 
 const AddRoom = () => {
   const [images, setImages] = useState({
@@ -25,6 +26,7 @@ const AddRoom = () => {
   })
   
   const navigate = useNavigate();
+  const { notify } = useNotify();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,14 +52,26 @@ const AddRoom = () => {
         body: formData
       });
       if (response.ok) {
-        alert('Room added successfully!');
-        navigate('/owner/list-room');
+        notify({
+          type: 'success',
+          title: 'Room Added',
+          message: 'The room has been added successfully!',
+          onConfirm: () => navigate('/owner/list-room')
+        });
       } else {
-        alert('Error adding room');
+        notify({
+          type: 'error',
+          title: 'Addition Failed',
+          message: 'There was an error adding the room.'
+        });
       }
     } catch (error) {
       console.error(error);
-      alert('Error adding room');
+      notify({
+        type: 'error',
+        title: 'Error',
+        message: 'An unexpected error occurred while adding the room.'
+      });
     }
   };
 

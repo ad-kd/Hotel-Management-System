@@ -1,15 +1,21 @@
 import React, { useState } from 'react'
 
 import Title from '../../components/Title'
+import { useNotify } from '../../context/NotificationContext'
 
 const ListRoom = () => {
   const [rooms, setRooms] = useState([])
+  const { notify } = useNotify();
 
-  React.useEffect(() => {
+  const fetchRooms = () => {
     fetch('http://localhost:5000/api/rooms')
       .then(res => res.json())
       .then(data => setRooms(data))
       .catch(err => console.error(err));
+  };
+
+  React.useEffect(() => {
+    fetchRooms();
   }, []);
 
   const toggleAvailability = async (id, currentStatus) => {
@@ -30,17 +36,33 @@ const ListRoom = () => {
   };
 
   const deleteRoom = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this room?')) return;
-    try {
-      const response = await fetch(`http://localhost:5000/api/rooms/${id}`, {
-        method: 'DELETE'
-      });
-      if (response.ok) {
-        setRooms(prevRooms => prevRooms.filter(room => room._id !== id));
+    notify({
+      type: 'confirm',
+      title: 'Delete Room',
+      message: 'Are you sure you want to delete this room? This action cannot be undone.',
+      onConfirm: async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/api/rooms/${id}`, {
+            method: 'DELETE'
+          });
+          if (response.ok) {
+            fetchRooms();
+            notify({
+              type: 'success',
+              title: 'Deleted',
+              message: 'Room deleted successfully.'
+            });
+          }
+        } catch (err) {
+          console.error(err);
+          notify({
+            type: 'error',
+            title: 'Error',
+            message: 'Failed to delete room.'
+          });
+        }
       }
-    } catch (err) {
-      console.error(err);
-    }
+    });
   };
 
   return (
