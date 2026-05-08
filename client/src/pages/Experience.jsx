@@ -1,10 +1,41 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import poolImg from '../assets/experience_pool.png';
 import spaImg from '../assets/experience_spa.png';
 import diningImg from '../assets/experience_dining.png';
+import coastalImg from '../assets/coastal.png';
+import urbanImg from '../assets/urban.png';
+import mountainImg from '../assets/mountain.png';
 
 const Experience = () => {
+  const collectionRef = useRef(null);
+  const navigate = useNavigate();
+
+  const scrollToCollection = () => {
+    collectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const collections = [
+    {
+      title: 'Coastal Retreats',
+      description: 'Pristine beaches and azure waters for the ultimate escape.',
+      image: coastalImg,
+      query: 'coastal'
+    },
+    {
+      title: 'Urban Luxury',
+      description: 'Sophisticated stays in the heart of the world\'s vibrant cities.',
+      image: urbanImg,
+      query: 'urban'
+    },
+    {
+      title: 'Mountain Havens',
+      description: 'Serene sanctuaries nestled among snowy peaks and fresh air.',
+      image: mountainImg,
+      query: 'mountain'
+    }
+  ];
+
   return (
     <div className="w-full bg-white">
       {/* Hero Section */}
@@ -21,7 +52,10 @@ const Experience = () => {
           <p className="text-gray-200 text-lg md:text-2xl font-light mb-10 drop-shadow-md">
             Discover a collection of extraordinary experiences designed to awaken your senses and create lasting memories.
           </p>
-          <button className="bg-transparent border border-white text-white hover:bg-white hover:text-black transition-colors duration-500 px-10 py-3 uppercase tracking-widest text-sm">
+          <button 
+            onClick={scrollToCollection}
+            className="bg-transparent border border-white text-white hover:bg-white hover:text-black transition-all duration-500 px-10 py-3 uppercase tracking-widest text-sm cursor-pointer active:scale-95"
+          >
             Explore Collection
           </button>
         </div>
@@ -35,8 +69,39 @@ const Experience = () => {
         </p>
       </section>
 
+      {/* The Collection Section */}
+      <section ref={collectionRef} className="py-24 bg-gray-50 px-6 lg:px-24 scroll-mt-20">
+        <div className="max-w-7xl mx-auto text-center mb-16">
+          <p className="text-secondary tracking-[0.15em] uppercase text-sm font-semibold mb-2">Our Portfolio</p>
+          <h2 className="font-playfair text-4xl md:text-5xl text-gray-900 mb-4">The Collection</h2>
+          <div className="w-24 h-1 bg-primary mx-auto"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {collections.map((item, index) => (
+            <div 
+              key={index} 
+              onClick={() => navigate(`/rooms?search=${item.query}`)}
+              className="group relative h-[500px] overflow-hidden rounded-2xl cursor-pointer shadow-xl transition-all duration-500 hover:-translate-y-2"
+            >
+              <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
+              <div className="absolute bottom-0 left-0 p-8 text-white">
+                <h3 className="font-playfair text-3xl mb-2">{item.title}</h3>
+                <p className="text-gray-300 text-sm font-light mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0">
+                  {item.description}
+                </p>
+                <div className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-secondary">
+                  View Collection <span>&rarr;</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Experience 1: The Spa */}
-      <section className="py-16 px-6 lg:px-24 max-w-7xl mx-auto">
+      <section className="py-24 px-6 lg:px-24 max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-16">
           <div className="w-full lg:w-1/2 relative group overflow-hidden rounded-tr-[4rem] rounded-bl-[4rem]">
             <img src={spaImg} alt="Luxury Spa" className="w-full h-[500px] object-cover transition-transform duration-1000 group-hover:scale-105" />
@@ -55,7 +120,7 @@ const Experience = () => {
       </section>
 
       {/* Experience 2: Fine Dining */}
-      <section className="py-16 px-6 lg:px-24 max-w-7xl mx-auto">
+      <section className="py-24 px-6 lg:px-24 max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row-reverse items-center gap-16">
           <div className="w-full lg:w-1/2 relative group overflow-hidden rounded-tl-[4rem] rounded-br-[4rem]">
             <img src={diningImg} alt="Fine Dining" className="w-full h-[500px] object-cover transition-transform duration-1000 group-hover:scale-105" />
@@ -74,7 +139,7 @@ const Experience = () => {
       </section>
 
       {/* Experience 3: The Infinity Pool */}
-      <section className="py-16 px-6 lg:px-24 max-w-7xl mx-auto mb-20">
+      <section className="py-24 px-6 lg:px-24 max-w-7xl mx-auto mb-20">
         <div className="flex flex-col lg:flex-row items-center gap-16">
           <div className="w-full lg:w-1/2 relative group overflow-hidden rounded-tr-[4rem] rounded-bl-[4rem]">
             <img src={poolImg} alt="Infinity Pool Sunset" className="w-full h-[500px] object-cover transition-transform duration-1000 group-hover:scale-105" />
