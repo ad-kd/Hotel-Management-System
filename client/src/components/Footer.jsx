@@ -39,7 +39,7 @@ const Footer = () => {
           <div className='flex flex-col gap-6'>
             <img 
               src={assets.logo} 
-              alt="QuickStay Logo" 
+              alt="Madurai Mandabam Logo" 
               className='footer-brand-logo w-40' 
             />
             <p className='text-sm leading-relaxed'>
@@ -98,7 +98,7 @@ const Footer = () => {
               </li>
               <li className='flex items-center gap-3'>
                 <img src={assets.searchIcon} alt="Email" className='w-5 opacity-70 invert' />
-                <span>reservations@quickstay.com</span>
+                <span>reservations@maduraimandabam.com</span>
               </li>
             </ul>
             <div className='mt-8 pt-6 border-t border-white/5'>
@@ -111,7 +111,7 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className='footer-bottom py-8 flex flex-col md:flex-row justify-between items-center gap-6 text-xs tracking-wide uppercase'>
-          <p>© {new Date().getFullYear()} QuickStay Global. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Madurai Mandabam Global. All rights reserved.</p>
           <div className='flex gap-8'>
             <Link to="#" className='hover:text-white transition-colors'>Terms of Service</Link>
             <Link to="#" className='hover:text-white transition-colors'>Sitemap</Link>

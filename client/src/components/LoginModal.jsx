@@ -68,7 +68,7 @@ const LoginModal = ({ isOpen, onClose, setOwnerLoggedIn, initialView = 'selectio
                 
                 {view === 'selection' ? (
                     <div className="flex flex-col items-center py-6">
-                        <h2 className="text-2xl font-playfair mb-8">Welcome to QuickStay</h2>
+                        <h2 className="text-2xl font-playfair mb-8">Welcome to Madurai Mandabam</h2>
                         <button 
                             onClick={() => { onClose(); openSignIn(); }}
                             className="w-full bg-indigo-600 text-white rounded-lg py-3 mb-4 hover:bg-indigo-700 transition"

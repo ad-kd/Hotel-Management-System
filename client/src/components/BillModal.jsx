@@ -18,8 +18,8 @@ const BillModal = ({ isOpen, onClose, booking }) => {
                         </svg>
                     </button>
                     <div className="flex items-center gap-3 mb-2">
-                        <img src={assets.logo} alt="QuickStay" className="h-8 invert brightness-0" />
-                        <span className="text-xl font-playfair font-bold">QuickStay</span>
+                        <img src={assets.logo} alt="Madurai Mandabam" className="h-8 invert brightness-0" />
+                        <span className="text-xl font-playfair font-bold">Madurai Mandabam</span>
                     </div>
                     <h2 className="text-2xl font-bold">Booking Receipt</h2>
                     <p className="text-indigo-100 text-sm mt-1">Order #{booking._id.slice(-8).toUpperCase()}</p>
@@ -78,7 +78,7 @@ const BillModal = ({ isOpen, onClose, booking }) => {
                         Done
                     </button>
                     
-                    <p className="text-center text-xs text-gray-400">Thank you for choosing QuickStay!</p>
+                    <p className="text-center text-xs text-gray-400">Thank you for choosing Madurai Mandabam!</p>
                 </div>
             </div>
         </div>

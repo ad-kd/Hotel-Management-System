@@ -79,7 +79,7 @@ const Navbar = () => {
 
             {/* Logo */}
             <Link to='/'>
-                <img src={asset.logo} alt="logo" className={`h-9 ${isScrolled && 'invert opacity-80'}`} />
+                <img src={asset.logo} alt="Madurai Mandabam Logo" className={`h-9 ${isScrolled && 'invert opacity-80'}`} />
             </Link>
 
             {/* Desktop Nav */}
