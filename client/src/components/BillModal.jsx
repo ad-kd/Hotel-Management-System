@@ -8,7 +8,7 @@ const BillModal = ({ isOpen, onClose, booking }) => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all">
             <div className="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl transform transition-all animate-in fade-in zoom-in duration-300">
                 {/* Header */}
-                <div className="bg-indigo-600 p-8 text-white relative">
+                <div className="bg-primary p-8 text-white relative">
                     <button 
                         onClick={onClose}
                         className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
@@ -22,7 +22,7 @@ const BillModal = ({ isOpen, onClose, booking }) => {
                         <span className="text-xl font-playfair font-bold">Madurai Mandabam</span>
                     </div>
                     <h2 className="text-2xl font-bold">Booking Receipt</h2>
-                    <p className="text-indigo-100 text-sm mt-1">Order #{booking._id.slice(-8).toUpperCase()}</p>
+                    <p className="text-white/80 text-sm mt-1">Order #{booking._id.slice(-8).toUpperCase()}</p>
                 </div>
 
                 {/* Content */}
@@ -57,14 +57,14 @@ const BillModal = ({ isOpen, onClose, booking }) => {
                             </div>
                             <div className="flex justify-between items-center py-4 border-t border-dashed border-gray-200 mt-4">
                                 <p className="text-lg font-bold text-gray-800">Total Amount</p>
-                                <p className="text-2xl font-bold text-indigo-600">${booking.totalPrice}</p>
+                                <p className="text-2xl font-bold text-primary">${booking.totalPrice}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="bg-gray-50 p-4 rounded-xl flex items-center gap-3">
-                        <div className="bg-indigo-100 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="bg-primary/10 p-2 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>

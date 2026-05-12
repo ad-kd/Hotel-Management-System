@@ -100,6 +100,22 @@ router.get('/rooms', async (req, res) => {
     }
 });
 
+// Get hotel by ID
+router.get('/hotels/:id', async (req, res) => {
+    try {
+        const hotel = await Hotel.findById(req.params.id).lean();
+        if (!hotel) return res.status(404).json({ error: 'Hotel not found' });
+        
+        if (hotel.owner) {
+            const owner = await User.findById(hotel.owner).lean();
+            hotel.owner = owner;
+        }
+        res.json(hotel);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Get room by ID
 router.get('/rooms/:id', async (req, res) => {
     try {
@@ -256,10 +272,9 @@ router.post('/reviews', async (req, res) => {
     }
 });
 
-// Get all verified reviews (for testimonials on homepage)
+// Get verified reviews
 router.get('/reviews', async (req, res) => {
     try {
-        // Fetch verified reviews, populate user info
         const reviews = await Review.find({ isVerified: true })
             .populate('user', 'username image')
             .sort({ createdAt: -1 })
@@ -267,6 +282,16 @@ router.get('/reviews', async (req, res) => {
             .lean();
             
         res.json(reviews);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Delete booking
+router.delete('/bookings/:id', async (req, res) => {
+    try {
+        await Booking.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Booking deleted' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

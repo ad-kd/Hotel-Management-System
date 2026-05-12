@@ -1,14 +1,14 @@
 import React from 'react'
-import hotelExterior from '../assets/hotel_exterior.png'
+import hotelExterior from '../assets/about_hero.png'
 import ownerPortrait from '../assets/owner_portrait.png'
 
 const About = () => {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center">
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={hotelExterior} alt="Hotel Exterior" className="w-full h-full object-cover" />
+          <img src={hotelExterior} alt="Hotel Exterior" className="w-full h-full object-cover animate-ken-burns" />
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
         <div className="relative z-10 text-center px-4">
@@ -48,7 +48,7 @@ const About = () => {
                 "We don't just host guests; we welcome friends into our grand home. I look forward to personally welcoming you."
               </p>
               <div className="pt-6">
-                <p className="font-playfair text-2xl font-bold text-primary">Isabella Aetheris</p>
+                <p className="font-playfair text-2xl font-bold text-primary">Lakshmi Ranganathan</p>
                 <p className="text-sm text-gray-500 uppercase tracking-widest mt-1">Founder & Owner</p>
               </div>
             </div>

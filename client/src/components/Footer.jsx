@@ -94,7 +94,7 @@ const Footer = () => {
               </li>
               <li className='flex items-center gap-3'>
                 <img src={assets.userIcon} alt="Phone" className='w-5 opacity-70 invert' />
-                <span>+1 (555) 000-8888</span>
+                <span>+91 00000 00000</span>
               </li>
               <li className='flex items-center gap-3'>
                 <img src={assets.searchIcon} alt="Email" className='w-5 opacity-70 invert' />

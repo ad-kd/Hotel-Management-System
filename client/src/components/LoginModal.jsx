@@ -71,13 +71,13 @@ const LoginModal = ({ isOpen, onClose, setOwnerLoggedIn, initialView = 'selectio
                         <h2 className="text-2xl font-playfair mb-8">Welcome to Madurai Mandabam</h2>
                         <button 
                             onClick={() => { onClose(); openSignIn(); }}
-                            className="w-full bg-indigo-600 text-white rounded-lg py-3 mb-4 hover:bg-indigo-700 transition"
+                            className="w-full bg-primary text-white rounded-lg py-3 mb-4 hover:bg-primary/90 transition"
                         >
                             Login as Customer
                         </button>
                         <button 
                             onClick={() => setView('ownerLogin')}
-                            className="w-full bg-white text-indigo-600 border border-indigo-600 rounded-lg py-3 hover:bg-indigo-50 transition"
+                            className="w-full bg-white text-primary border border-primary rounded-lg py-3 hover:bg-primary/5 transition"
                         >
                             Login as Hotel Owner
                         </button>
@@ -99,7 +99,7 @@ const LoginModal = ({ isOpen, onClose, setOwnerLoggedIn, initialView = 'selectio
                                     type="email" 
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-600"
+                                    className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-primary"
                                     required 
                                 />
                             </div>
@@ -110,7 +110,7 @@ const LoginModal = ({ isOpen, onClose, setOwnerLoggedIn, initialView = 'selectio
                                         type={showPassword ? "text" : "password"} 
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="border border-gray-300 rounded-lg p-2 w-full pr-10 focus:outline-none focus:border-indigo-600"
+                                        className="border border-gray-300 rounded-lg p-2 w-full pr-10 focus:outline-none focus:border-primary"
                                         required 
                                     />
                                     <button 
@@ -122,7 +122,7 @@ const LoginModal = ({ isOpen, onClose, setOwnerLoggedIn, initialView = 'selectio
                                     </button>
                                 </div>
                             </div>
-                            <button type="submit" className="w-full bg-indigo-600 text-white rounded-lg py-3 mt-4 hover:bg-indigo-700 transition">
+                            <button type="submit" className="w-full bg-primary text-white rounded-lg py-3 mt-4 hover:bg-primary/90 transition">
                                 Sign In
                             </button>
                         </form>

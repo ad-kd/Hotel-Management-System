@@ -224,8 +224,18 @@ const RoomDetails = () => {
             </div>
           </div>
         </div>
-        <button className='px-6 py-2.5 mt-4 rounded text-white
-         bg-primary hover:bg-primary-dull transition-all cursor-pointer'>Contact Now</button>
+        <button 
+          onClick={() => {
+            const customerName = user?.fullName || user?.username || 'Valued Guest';
+            const subject = encodeURIComponent("To Contact the Hotel Owner");
+            const body = encodeURIComponent(`Hi ${customerName}, i need to enquiry about the ${room.roomType}/${room.hotel.name}`);
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=adkd.discord@gmail.com&su=${subject}&body=${body}`;
+            window.open(gmailUrl, '_blank');
+          }}
+          className='px-6 py-2.5 mt-4 rounded text-white bg-primary hover:bg-primary-dull transition-all cursor-pointer'
+        >
+          Contact Now
+        </button>
       </div>
 
     </div>

@@ -132,7 +132,7 @@ const Navbar = () => {
                     Logout
                 </button>)
                 :
-                (<button onClick={() => setIsLoginModalOpen(true)} className="group px-8 py-2.5 bg-indigo-600 rounded-lg text-white cursor-pointer active:scale-95 transition duration-300 hover:bg-indigo-700">
+                (<button onClick={() => setIsLoginModalOpen(true)} className="group px-8 py-2.5 bg-primary rounded-lg text-white cursor-pointer active:scale-95 transition duration-300 hover:bg-primary/90">
                     <p className="relative h-6 overflow-hidden">
                         <span className="block transition-transform duration-300 group-hover:-translate-y-full">Login</span>
                         <span className="absolute w-full top-full left-1/2 -translate-x-1/2 block transition-transform duration-300 group-hover:translate-y-[-100%]">Login</span>
@@ -170,7 +170,7 @@ const Navbar = () => {
                     Dashboard
                 </button>}
 
-                {!user && !isOwnerLoggedIn && <button onClick={() => setIsLoginModalOpen(true)} className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">
+                {!user && !isOwnerLoggedIn && <button onClick={() => setIsLoginModalOpen(true)} className="bg-primary text-white px-8 py-2.5 rounded-full transition-all duration-500">
                     Login
                 </button>}
                 {isOwnerLoggedIn && <button onClick={handleOwnerLogout} className="bg-red-600 text-white px-8 py-2.5 rounded-full transition-all duration-500">

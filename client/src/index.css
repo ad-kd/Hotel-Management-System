@@ -3,8 +3,10 @@
 
 
 @theme {
-  --color-primary: #2563EB;
-  --color-secondary: #FBBD24;
+  --color-primary: #7B1818;
+  --color-secondary: #D4AF37;
+  --color-accent: #FFD700;
+  --color-temple-red: #8B0000;
 }
 
 *{
@@ -14,4 +16,14 @@
 
 .font-playfair{
   font-family: Playfair !important;
+}
+
+@keyframes ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.1) translate(-1%, -1%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+
+.animate-ken-burns {
+  animation: ken-burns 30s ease-in-out infinite;
 }

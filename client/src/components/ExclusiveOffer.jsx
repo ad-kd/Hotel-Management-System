@@ -19,7 +19,7 @@ const ExclusiveOffer = () => {
                     bg-no-repeat bg-cover bg-center' style={{
                         backgroundImage: `url(${item.image})`
                     }}>
-                    <p className='px-3 py-1 absolute top-4 left-4 text-xs bg-white text-gray-800 font-medium rounded-full'>{item.priceOff}% OFF</p>
+                    <p className='px-3 py-1 absolute top-4 left-4 text-xs bg-secondary text-white font-medium rounded-full'>{item.priceOff}% OFF</p>
                     <div>
                         <p className='text-2xl font-medium font-playfair'>{item.title}</p>
                         <p>{item.description}</p>

@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import poolImg from '../assets/experience_pool.png';
+import experienceHero from '../assets/experience_hero.png';
+import poolImg from '../assets/madurai_pool.png';
 import spaImg from '../assets/experience_spa.png';
-import diningImg from '../assets/experience_dining.png';
-import coastalImg from '../assets/coastal.png';
+import diningImg from '../assets/madurai_dining.png';
+import templeImg from '../assets/madurai_temple.png';
+import marketImg from '../assets/madurai_market.png';
 import urbanImg from '../assets/urban.png';
-import mountainImg from '../assets/mountain.png';
 
 const Experience = () => {
   const collectionRef = useRef(null);
@@ -17,10 +18,10 @@ const Experience = () => {
 
   const collections = [
     {
-      title: 'Coastal Retreats',
-      description: 'Pristine beaches and azure waters for the ultimate escape.',
-      image: coastalImg,
-      query: 'coastal'
+      title: 'Temple Sanctuaries',
+      description: 'Experience the divine energy of Madurai\'s ancient gopurams and sacred halls.',
+      image: templeImg,
+      query: 'temple'
     },
     {
       title: 'Urban Luxury',
@@ -29,10 +30,10 @@ const Experience = () => {
       query: 'urban'
     },
     {
-      title: 'Mountain Havens',
-      description: 'Serene sanctuaries nestled among snowy peaks and fresh air.',
-      image: mountainImg,
-      query: 'mountain'
+      title: 'Heritage Trails',
+      description: 'Discover the rich history of the Pandyan empire through traditional markets and monuments.',
+      image: marketImg,
+      query: 'heritage'
     }
   ];
 
@@ -41,7 +42,7 @@ const Experience = () => {
       {/* Hero Section */}
       <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={poolImg} alt="Infinity Pool" className="w-full h-full object-cover scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]" />
+          <img src={experienceHero} alt="Madurai Mandabam Experience" className="w-full h-full object-cover animate-ken-burns" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
@@ -65,7 +66,7 @@ const Experience = () => {
       <section className="py-24 px-6 lg:px-24 max-w-5xl mx-auto text-center">
         <h2 className="font-playfair text-4xl text-gray-900 mb-6">An Artful Approach to Leisure</h2>
         <p className="text-gray-600 text-lg leading-relaxed font-light">
-          At Aetheris, every moment is considered. Whether you seek the deep relaxation of our holistic spa, the culinary adventures of our Michelin-starred dining, or simply the serene beauty of our infinity edge pool at sunset, your experience is tailored to transcend expectations.
+          At Madurai Mandabam, every moment is considered. Whether you seek the deep relaxation of our holistic spa, the culinary adventures of our traditional South Indian dining, or simply the serene beauty of our courtyard at sunset, your experience is tailored to transcend expectations.
         </p>
       </section>
 
@@ -129,7 +130,7 @@ const Experience = () => {
             <p className="text-secondary tracking-[0.15em] uppercase text-sm font-semibold mb-2">Savor</p>
             <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-900 mb-6">Epicurean Heights</h2>
             <p className="text-gray-600 text-lg leading-relaxed font-light mb-8">
-              A symphony of flavors awaits at our signature restaurant. Overlooking the glittering city skyline, our executive chef crafts seasonal tasting menus that celebrate local provenance and global technique. An extensive, curated wine cellar ensures the perfect pairing for every course.
+              A symphony of flavors awaits at our signature restaurant. Overlooking the majestic temple gopurams, our executive chef crafts seasonal tasting menus that celebrate local provenance and traditional spices. Our curated collection of beverages ensures the perfect pairing for every course.
             </p>
             <Link to="/rooms" className="text-primary font-medium flex items-center gap-2 hover:gap-4 transition-all uppercase tracking-wider text-sm">
               <span>&larr;</span> Reserve a Table
@@ -146,9 +147,9 @@ const Experience = () => {
           </div>
           <div className="w-full lg:w-1/2 flex flex-col justify-center">
             <p className="text-secondary tracking-[0.15em] uppercase text-sm font-semibold mb-2">Unwind</p>
-            <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-900 mb-6">The Horizon Pool</h2>
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-900 mb-6">The Temple View Pool</h2>
             <p className="text-gray-600 text-lg leading-relaxed font-light mb-8">
-              Merge with the horizon at our iconic infinity pool. Set against breathtaking sunset views, it's the ultimate setting for daytime lounging or evening cocktails. Enjoy private cabanas, dedicated poolside service, and an atmosphere of pure, unadulterated bliss.
+              Merge with tranquility at our iconic traditional pool. Set against breathtaking views of the Meenakshi Temple gopurams, it's the ultimate setting for daytime lounging or evening cocktails. Enjoy private cabanas, dedicated poolside service, and an atmosphere of pure, unadulterated bliss.
             </p>
             <Link to="/rooms" className="text-primary font-medium flex items-center gap-2 hover:gap-4 transition-all uppercase tracking-wider text-sm">
               Book Your Stay <span>&rarr;</span>
@@ -159,7 +160,7 @@ const Experience = () => {
       
       {/* Call to Action */}
       <section className="bg-gray-900 text-white py-24 text-center px-4">
-        <h2 className="font-playfair text-4xl md:text-5xl mb-6">Ready to Experience Aetheris?</h2>
+        <h2 className="font-playfair text-4xl md:text-5xl mb-6">Ready to Experience Madurai Mandabam?</h2>
         <p className="text-gray-400 font-light text-lg mb-10 max-w-2xl mx-auto">
           Immerse yourself in luxury. Reserve your journey today and unlock a world of unparalleled experiences.
         </p>

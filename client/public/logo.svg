@@ -1,0 +1,11 @@
+<svg width="240" height="60" viewBox="0 0 240 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- House Icon -->
+  <path d="M10 25L30 5L50 25" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M15 25V50H45V25" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 50V32" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M38 50V32" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Text -->
+  <text x="65" y="28" fill="white" style="font-family: 'Playfair', serif; font-size: 24px; font-weight: 500; letter-spacing: 2px;">MADURAI</text>
+  <text x="65" y="52" fill="white" style="font-family: 'Playfair', serif; font-size: 24px; font-weight: 500; letter-spacing: 2px;">MANDABAM</text>
+</svg>
