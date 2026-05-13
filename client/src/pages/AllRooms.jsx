@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import assets, { facilityIcons } from '../assets/assets'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import StarRating from '../components/StarRating'
+import API_URL from '../config'
 
 const CheckBox = ({ label, selected = false, onChange = () => { } }) => {
   return (
@@ -34,7 +35,7 @@ const AllRooms = () => {
   const searchQuery = searchParams.get('search')?.toLowerCase() || '';
 
   React.useEffect(() => {
-    fetch('http://localhost:5000/api/rooms')
+    fetch(`${API_URL}/api/rooms`)
       .then(res => res.json())
       .then(data => {
         setRooms(data);
@@ -168,7 +169,7 @@ const AllRooms = () => {
 
       </div>
       {/* Filters */}
-      <div className='bg-white w-80 border border-gray-300 text-gray-600 max-lg:mb-8 min-lg:mt-16'>
+      <div className='bg-white w-full lg:w-80 border border-gray-300 text-gray-600 max-lg:mb-8 min-lg:mt-16'>
 
         <div className={` flex items-center justify-between px-5 py-2.5 min-lg:border-b border-gray-300 ${openFilter && "border-b"}`}>
           <p className='text-base font-medium text-gray-800'>FILTERS</p>

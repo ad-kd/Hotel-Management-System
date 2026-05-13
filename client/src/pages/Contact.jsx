@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import assets from '../assets/assets'
 import { useNotify } from '../context/NotificationContext'
+import API_URL from '../config'
 
 const Contact = () => {
   const { id } = useParams()
@@ -10,7 +11,7 @@ const Contact = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    fetch(`http://localhost:5000/api/hotels/${id}`)
+    fetch(`${API_URL}/api/hotels/${id}`)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {

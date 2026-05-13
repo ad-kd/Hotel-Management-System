@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 
 import Title from '../../components/Title'
 import { useNotify } from '../../context/NotificationContext'
+import API_URL from '../../config'
 
 const ListRoom = () => {
   const [rooms, setRooms] = useState([])
   const { notify } = useNotify();
 
   const fetchRooms = () => {
-    fetch('http://localhost:5000/api/rooms')
+    fetch(`${API_URL}/api/rooms`)
       .then(res => res.json())
       .then(data => setRooms(data))
       .catch(err => console.error(err));
@@ -20,7 +21,7 @@ const ListRoom = () => {
 
   const toggleAvailability = async (id, currentStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/rooms/${id}`, {
+      const response = await fetch(`${API_URL}/api/rooms/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -42,7 +43,7 @@ const ListRoom = () => {
       message: 'Are you sure you want to delete this room? This action cannot be undone.',
       onConfirm: async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/rooms/${id}`, {
+          const response = await fetch(`${API_URL}/api/rooms/${id}`, {
             method: 'DELETE'
           });
           if (response.ok) {

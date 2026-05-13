@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useClerk } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 
 const EyeIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 hover:text-gray-700">
@@ -39,7 +40,7 @@ const LoginModal = ({ isOpen, onClose, setOwnerLoggedIn, initialView = 'selectio
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/api/owner/login', {
+            const response = await fetch(`${API_URL}/api/owner/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -61,7 +62,7 @@ const LoginModal = ({ isOpen, onClose, setOwnerLoggedIn, initialView = 'selectio
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center">
-            <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+            <div className="bg-white rounded-2xl w-[92%] sm:w-full max-w-md p-6 sm:p-8 shadow-2xl relative">
                 <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-black">
                     ✕
                 </button>

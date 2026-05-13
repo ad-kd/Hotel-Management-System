@@ -5,6 +5,7 @@ import { useUser } from '@clerk/clerk-react'
 import { useNavigate } from 'react-router-dom'
 import BillModal from '../components/BillModal'
 import { useNotify } from '../context/NotificationContext'
+import API_URL from '../config'
 
 const MyBookings = () => {
   const { user } = useUser();
@@ -16,7 +17,7 @@ const MyBookings = () => {
 
   React.useEffect(() => {
     if (user) {
-      fetch('http://localhost:5000/api/bookings')
+      fetch(`${API_URL}/api/bookings`)
         .then(res => res.json())
         .then(data => {
           const userBookings = data.filter(booking => booking.user?.clerkId === user.id);
@@ -29,7 +30,7 @@ const MyBookings = () => {
 
   const handlePayment = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/bookings/${id}/pay`, {
+      const response = await fetch(`${API_URL}/api/bookings/${id}/pay`, {
         method: 'PUT'
       });
       if (response.ok) {

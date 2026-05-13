@@ -145,14 +145,42 @@ const Navbar = () => {
 
 
             <div className="flex items-center gap-3 md:hidden">
+                <img 
+                    onClick={() => setIsSearchOpen(!isSearchOpen)} 
+                    src={asset.searchIcon} 
+                    alt="search" 
+                    className={`cursor-pointer ${isScrolled && 'invert h-6'} h-6`} 
+                />
                 {user && <UserButton>
                     <UserButton.MenuItems>
                         <UserButton.Action label='My Bookings' labelIcon={<BookIcon/>} onClick={()=> navigate('/my-bookings')} />
                         <UserButton.Action label='Write Review' labelIcon={<ReviewIcon/>} onClick={()=> navigate('/write-review')} />
                     </UserButton.MenuItems>
                 </UserButton>}
-                <img onClick={() => setIsMenuOpen(!isMenuOpen)} src={asset.menuIcon} alt="Menu Icon" className={`${isScrolled && "invert h-4"}`} />
+                <img onClick={() => setIsMenuOpen(!isMenuOpen)} src={asset.menuIcon} alt="Menu Icon" className={`${isScrolled && "invert h-4"} h-6`} />
             </div>
+
+            {/* Mobile Search Input Overlay */}
+            {isSearchOpen && (
+                <div className="md:hidden fixed top-0 left-0 w-full bg-white p-4 shadow-lg z-[60] flex items-center gap-3 animate-in slide-in-from-top duration-300">
+                    <img src={asset.searchIcon} alt="search" className="h-5 invert" />
+                    <input 
+                        autoFocus
+                        type="text" 
+                        placeholder="Search by city..." 
+                        className="flex-1 bg-transparent border-none outline-none text-gray-800"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch(e);
+                                setIsSearchOpen(false);
+                            }
+                        }}
+                    />
+                    <button onClick={() => setIsSearchOpen(false)} className="text-gray-500 text-xl">✕</button>
+                </div>
+            )}
 
             {/* Mobile Menu */}
             <div className={`fixed top-0 left-0 w-full h-screen bg-white text-base flex flex-col md:hidden items-center justify-center gap-6 font-medium text-gray-800 transition-all duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>

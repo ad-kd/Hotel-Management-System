@@ -3,6 +3,7 @@ import React from 'react'
 import HotelCard from './HotelCard'
 import Title from './Title'
 import { useNavigate } from 'react-router-dom'
+import API_URL from '../config'
 
 const FeaturedDestination = () => {
 
@@ -10,7 +11,7 @@ const FeaturedDestination = () => {
     const [rooms, setRooms] = React.useState([]);
 
     React.useEffect(() => {
-        fetch('http://localhost:5000/api/rooms')
+        fetch(`${API_URL}/api/rooms`)
             .then(res => res.json())
             .then(data => setRooms(data))
             .catch(err => console.error(err));
@@ -22,7 +23,7 @@ const FeaturedDestination = () => {
             <Title title='Featured Destination' subTitle='Discover our handpicked
             selection of exceptional properties around the world, offering unparalleled
             luxury and unforgettable experiences.'/>
-            <div className='flex flex-warp items-center justify-between gap-6 mt-20'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center justify-between gap-6 mt-20 w-full'>
                 {rooms.slice(0, 4).map((room, index) => (
                     <HotelCard key={room._id} room={room} index={index} />
                 ))}

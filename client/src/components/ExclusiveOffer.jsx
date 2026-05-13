@@ -14,7 +14,7 @@ const ExclusiveOffer = () => {
 
                 <button 
                     onClick={() => navigate('/rooms')}
-                    className='group flex items-center gap-2 font-medium cursor-pointer max-md:mt-12 bg-gray-100 hover:bg-gray-200 px-6 py-2.5 rounded-full transition-all'
+                    className='group flex items-center justify-center gap-2 font-medium cursor-pointer max-md:mt-10 max-md:w-full bg-gray-100 hover:bg-gray-200 px-8 py-3 rounded-full transition-all'
                 >
                     View All Offers 
                     <img src={assets.arrowIcon} alt="arrow-icon" className='group-hover:translate-x-1 transition-all' />

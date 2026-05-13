@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import Title from '../components/Title';
+import API_URL from '../config';
 
 const WriteReview = () => {
     const { user } = useUser();
@@ -19,7 +20,7 @@ const WriteReview = () => {
             try {
                 // In a real app we would fetch only bookings for this user via clerkId or email
                 // But since the current api gets all bookings, we will filter them here.
-                const response = await fetch('http://localhost:5000/api/bookings');
+                const response = await fetch(`${API_URL}/api/bookings`);
                 const data = await response.json();
                 
                 // Filter to only show the current logged-in user's paid bookings
@@ -47,7 +48,7 @@ const WriteReview = () => {
         setMessage('');
 
         try {
-            const response = await fetch('http://localhost:5000/api/reviews', {
+            const response = await fetch(`${API_URL}/api/reviews`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

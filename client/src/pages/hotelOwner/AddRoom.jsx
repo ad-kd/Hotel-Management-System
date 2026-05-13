@@ -3,6 +3,7 @@ import Title from '../../components/Title'
 import assets from '../../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { useNotify } from '../../context/NotificationContext'
+import API_URL from '../../config'
 
 const AddRoom = () => {
   const [images, setImages] = useState({
@@ -49,7 +50,7 @@ const AddRoom = () => {
     });
 
     try {
-      const response = await fetch('http://localhost:5000/api/rooms', {
+      const response = await fetch(`${API_URL}/api/rooms`, {
         method: 'POST',
         body: formData
       });

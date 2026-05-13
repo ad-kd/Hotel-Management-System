@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Title from './Title'
 import { testimonials as dummyTestimonials } from '../assets/assets'
 import StarRating from './StarRating'
+import API_URL from '../config'
 
 const Testimonials = () => {
     const [reviews, setReviews] = useState([]);
@@ -9,7 +10,7 @@ const Testimonials = () => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/reviews');
+                const response = await fetch(`${API_URL}/api/reviews`);
                 const data = await response.json();
                 if (data && data.length > 0) {
                     setReviews(data);

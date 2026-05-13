@@ -4,6 +4,7 @@ import { useUser, useClerk } from '@clerk/clerk-react'
 import assets, { facilityIcons, roomCommonData } from '../assets/assets'
 import StarRating from '../components/StarRating.jsx'
 import { useNotify } from '../context/NotificationContext'
+import API_URL from '../config'
 
 const RoomDetails = () => {
 
@@ -47,7 +48,7 @@ const RoomDetails = () => {
       message: `Proceed with payment of $${totalPrice}?`,
       onConfirm: async () => {
         try {
-          const response = await fetch('http://localhost:5000/api/bookings', {
+          const response = await fetch(`${API_URL}/api/bookings`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -94,7 +95,7 @@ const RoomDetails = () => {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/rooms/${id}`)
+    fetch(`${API_URL}/api/rooms/${id}`)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {

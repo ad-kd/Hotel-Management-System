@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import Title from '../../components/Title'
 import assets from '../../assets/assets'
+import API_URL from '../../config'
 
 const Dashboard = () => {
 
   const[dashboardData, setDashboardData]= useState({ totalBookings: 0, totalRevenue: 0, bookings: [] })
 
   React.useEffect(() => {
-    fetch('http://localhost:5000/api/dashboard')
+    fetch(`${API_URL}/api/dashboard`)
       .then(res => res.json())
       .then(data => setDashboardData(data))
       .catch(err => console.error(err));
@@ -17,7 +18,7 @@ const Dashboard = () => {
   const handleDeleteBooking = async (id) => {
     if (window.confirm('Are you sure you want to delete this booking?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+        const response = await fetch(`${API_URL}/api/bookings/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -40,7 +41,7 @@ const Dashboard = () => {
       room listings, track bookings and analyze revenue-all in one place. Stay updated
       with real-time insights to ensure smooth operations.'/>
 
-      <div className='flex gap-4 my-8'>
+      <div className='flex flex-col sm:flex-row gap-4 my-8'>
           {/* Total Booking */}
           <div className='bg-primary/5 border border-primary/10 rounded-xl flex p-6 shadow-sm'>
             <img src={assets.totalBookingIcon} alt="" className='max-sm:hidden h-12'/>
