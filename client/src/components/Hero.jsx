@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import assets, { cities } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
+import heroImage from '../assets/heroImage.png'
 
 const Hero = () => {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ const Hero = () => {
             {/* Animated Background */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/src/assets/heroImage.png"
+                    src={heroImage}
                     alt="Madurai Mandabam Hero"
                     className="w-full h-full object-cover animate-ken-burns"
                 />

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import assets from '../assets/assets';
+import heroImage from '../assets/heroImage.png';
 
 const TermsOfService = () => {
   useEffect(() => {
@@ -40,7 +40,7 @@ const TermsOfService = () => {
         <div className="absolute inset-0 bg-black/60 z-10"></div>
         <div 
           className="absolute inset-0 bg-cover bg-center animate-ken-burns"
-          style={{ backgroundImage: `url(${assets.hero_img || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070&auto=format&fit=crop'})` }}
+          style={{ backgroundImage: `url(${heroImage})` }}
         ></div>
         <div className="relative z-20 text-center px-4">
           <h1 className="text-4xl md:text-6xl font-playfair mb-4 slide-in-from-bottom">
