@@ -150,8 +150,18 @@ const AllRooms = () => {
                   </div>
                 ))}
               </div>
-              {/* room price for night */}
-              <p className='text-xl font-medium text-gray-700'>${room.pricePerNight}/night</p>
+               {/* room price for night */}
+              <div className='flex items-center gap-4'>
+                <p className='text-xl font-medium text-gray-700'>
+                  ${room.offer > 0 ? (room.pricePerNight * (1 - room.offer / 100)).toFixed(2) : room.pricePerNight}/night
+                </p>
+                {room.offer > 0 && (
+                  <>
+                    <p className='text-sm text-gray-400 line-through'>${room.pricePerNight}</p>
+                    <p className='text-xs font-inter py-1 px-2 text-white bg-orange-500 rounded-full'>{room.offer}% OFF</p>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         ))}

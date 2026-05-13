@@ -38,7 +38,8 @@ const RoomDetails = () => {
       return;
     }
 
-    const totalPrice = days * room.pricePerNight * guests;
+    const discountedPrice = room.offer > 0 ? room.pricePerNight * (1 - room.offer / 100) : room.pricePerNight;
+    const totalPrice = days * discountedPrice * guests;
 
     notify({
       type: 'confirm',
@@ -62,7 +63,8 @@ const RoomDetails = () => {
               checkOutDate,
               totalPrice,
               guests,
-              paymentMethod: 'Stripe'
+              paymentMethod: 'Stripe',
+              offerApplied: room.offer
             })
           });
           if (response.ok) {
@@ -110,8 +112,10 @@ const RoomDetails = () => {
 
       <div className='flex flex-col md:flex-row items-start md:items-center gap-2'>
         <h1 className='text-3xl md:text-4xl font-playfair'>{room.hotel.name}
-          <span className='font-inner text-sm'>({room.roomType})</span></h1>
-        <p className='text-xs font-inter py-1.5 px-3 text-white bg-orange-500 rounded-full'>20% OFF</p>
+          <span className='font-inner text-sm ml-2'>({room.roomType})</span></h1>
+        {room.offer > 0 && (
+          <p className='text-xs font-inter py-1.5 px-3 text-white bg-orange-500 rounded-full'>{room.offer}% OFF</p>
+        )}
       </div>
 
       {/* room rating */}
@@ -156,7 +160,14 @@ const RoomDetails = () => {
           </div>
         </div>
         {/* room price */}
-        <p className='text-2xl font-medium'>${room.pricePerNight}/Night</p>
+        <div className='flex items-center gap-4'>
+          <p className='text-2xl font-medium'>
+            ${room.offer > 0 ? (room.pricePerNight * (1 - room.offer / 100)).toFixed(2) : room.pricePerNight}/Night
+          </p>
+          {room.offer > 0 && (
+            <p className='text-lg text-gray-400 line-through'>${room.pricePerNight}</p>
+          )}
+        </div>
       </div>
 
       {/* Checkin & CheckOut Form */}

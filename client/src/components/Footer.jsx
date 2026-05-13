@@ -90,7 +90,7 @@ const Footer = () => {
             <ul className='flex flex-col gap-4 text-sm'>
               <li className='flex items-start gap-3'>
                 <img src={assets.locationIcon} alt="Location" className='w-5 opacity-70 invert mt-1' />
-                <span>123 Luxury Avenue, Resort District,<br />New York, NY 10001</span>
+                <span>123 Luxury Avenue, Resort District,<br /> Madurai, Mdu 650001</span>
               </li>
               <li className='flex items-center gap-3'>
                 <img src={assets.userIcon} alt="Phone" className='w-5 opacity-70 invert' />
@@ -113,9 +113,8 @@ const Footer = () => {
         <div className='footer-bottom py-8 flex flex-col md:flex-row justify-between items-center gap-6 text-xs tracking-wide uppercase'>
           <p>© {new Date().getFullYear()} Madurai Mandabam Global. All rights reserved.</p>
           <div className='flex gap-8'>
-            <Link to="#" className='hover:text-white transition-colors'>Terms of Service</Link>
-            <Link to="#" className='hover:text-white transition-colors'>Sitemap</Link>
-            <Link to="#" className='hover:text-white transition-colors'>Privacy Policy</Link>
+            <Link to="/terms" className='hover:text-white transition-colors'>Terms of Service</Link>
+            <Link to="/privacy" className='hover:text-white transition-colors'>Privacy Policy</Link>
           </div>
         </div>
       </div>

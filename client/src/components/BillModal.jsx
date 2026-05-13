@@ -53,8 +53,21 @@ const BillModal = ({ isOpen, onClose, booking }) => {
                         <div className="pt-4 border-t border-gray-100">
                             <div className="flex justify-between items-center mb-2">
                                 <p className="text-gray-500 text-sm">{booking.room?.roomType} x {Math.ceil((new Date(booking.checkOutDate) - new Date(booking.checkInDate)) / (1000 * 60 * 60 * 24))} nights</p>
-                                <p className="text-gray-800 font-medium">${booking.totalPrice}</p>
+                                <p className="text-gray-800 font-medium">
+                                    {booking.offerApplied > 0 ? (
+                                        <span className="line-through text-gray-400 mr-2">
+                                            ${(booking.totalPrice / (1 - booking.offerApplied / 100)).toFixed(2)}
+                                        </span>
+                                    ) : null}
+                                    ${booking.totalPrice}
+                                </p>
                             </div>
+                            {booking.offerApplied > 0 && (
+                                <div className="flex justify-between items-center mb-2 text-sm text-green-600">
+                                    <p>Discount Applied ({booking.offerApplied}%)</p>
+                                    <p>-${((booking.totalPrice / (1 - booking.offerApplied / 100)) - booking.totalPrice).toFixed(2)}</p>
+                                </div>
+                            )}
                             <div className="flex justify-between items-center py-4 border-t border-dashed border-gray-200 mt-4">
                                 <p className="text-lg font-bold text-gray-800">Total Amount</p>
                                 <p className="text-2xl font-bold text-primary">${booking.totalPrice}</p>

@@ -16,6 +16,7 @@ const AddRoom = () => {
     hotelLocation: '',
     roomType:'',
     pricePerNight: 0,
+    offer: 0,
     amenities: {
       'Free Wi-Fi': false,
       'Free Breakfast': false,
@@ -36,6 +37,7 @@ const AddRoom = () => {
     formData.append('hotelLocation', inputs.hotelLocation);
     formData.append('roomType', inputs.roomType);
     formData.append('pricePerNight', inputs.pricePerNight);
+    formData.append('offer', inputs.offer);
     
     const selectedAmenities = Object.keys(inputs.amenities).filter(key => inputs.amenities[key]);
     formData.append('amenities', JSON.stringify(selectedAmenities));
@@ -125,6 +127,13 @@ const AddRoom = () => {
           </p>
           <input type="number" placeholder='0' className='border border-gray-300 mt-1 rounded p-2 w-24'
           value={inputs.pricePerNight} onChange={e=> setInputs({...inputs, pricePerNight:e.target.value})}/>
+        </div>
+        <div>
+          <p className='mt-4 text-gray-800'>
+            Offer <span className='text-xs'>(%)</span>
+          </p>
+          <input type="number" placeholder='0' className='border border-gray-300 mt-1 rounded p-2 w-24'
+          value={inputs.offer} onChange={e=> setInputs({...inputs, offer:e.target.value})}/>
         </div>
        </div>
 

@@ -52,7 +52,7 @@ const Navbar = () => {
     };
 
     React.useEffect(() => {
-        const transparentPages = ['/', '/about', '/experience'];
+        const transparentPages = ['/', '/about', '/experience', '/terms', '/privacy'];
         const isTransparentPage = transparentPages.includes(location.pathname);
 
         setIsScrolled(!isTransparentPage || window.scrollY > 10);

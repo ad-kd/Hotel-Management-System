@@ -15,6 +15,8 @@ import AddRooms from './pages/hotelOwner/AddRoom.jsx'
 import ListRooms from './pages/hotelOwner/ListRoom.jsx'
 import WriteReview from './pages/WriteReview.jsx'
 import Contact from './pages/Contact.jsx'
+import TermsOfService from './pages/TermsOfService.jsx'
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 
 
 const App = () => {
@@ -35,6 +37,8 @@ const App = () => {
           <Route path='/experience' element={<Experience />}/>
           <Route path='/write-review' element={<WriteReview />}/>
           <Route path='/contact/:id' element={<Contact />}/>
+          <Route path='/terms' element={<TermsOfService />}/>
+          <Route path='/privacy' element={<PrivacyPolicy />}/>
           <Route path='/owner' element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path='add-room' element={<AddRooms />} />

@@ -80,6 +80,7 @@ const ListRoom = () => {
               <th className='py-3 px-4 text-gray-800 font-medium'>Name</th>
               <th className='py-3 px-4 text-gray-800 font-medium max-sm:hidden'>Facility</th>
               <th className='py-3 px-4 text-gray-800 font-medium'>Price / night</th>
+              <th className='py-3 px-4 text-gray-800 font-medium'>Offer (%)</th>
               <th className='py-3 px-4 text-gray-800 font-medium text-center'>Actions</th>
             </tr>
           </thead>
@@ -96,7 +97,10 @@ const ListRoom = () => {
                   </td>
 
                   <td className='py-3 px-4 text-gray-700 border-t border-gray-300'>
-                    {item.pricePerNight}
+                    ${item.pricePerNight}
+                  </td>
+                  <td className='py-3 px-4 text-gray-700 border-t border-gray-300'>
+                    {item.offer}%
                   </td>
 
                   <td className='py-3 px-4 border-t text-sm text-red-500 text-center border-gray-300'>

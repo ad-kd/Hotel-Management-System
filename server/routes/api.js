@@ -74,6 +74,7 @@ router.post('/rooms', upload.any(), async (req, res) => {
             hotel: hotel._id,
             roomType: req.body.roomType,
             pricePerNight: Number(req.body.pricePerNight),
+            offer: Number(req.body.offer || 0),
             amenities: amenities,
             images: images.length ? images : ['/assets/roomImg1.png']
         });
@@ -218,7 +219,8 @@ router.post('/bookings', async (req, res) => {
             guests,
             paymentMethod: paymentMethod || 'Stripe',
             status: 'confirmed',
-            isPaid: true
+            isPaid: true,
+            offerApplied: Number(req.body.offerApplied || 0)
         });
         res.json(booking);
     } catch (err) {
