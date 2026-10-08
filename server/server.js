@@ -12,8 +12,20 @@ connectDB();
 const app = express();
 
 // Middleware
+const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? ["https://hotel-management-system-five-dun.vercel.app"]
+    : ["http://localhost:5173", "http://localhost:3000", "http://localhost:5000"];
+
 app.use(cors({
-    origin: ["https://hotel-management-system-five-dun.vercel.app"],
+    origin: function (origin, callback) {
+        // allow requests with no origin (e.g., curl, mobile apps)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
